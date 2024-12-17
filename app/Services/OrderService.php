@@ -8,27 +8,36 @@ use App\Models\OrderByCurrency;
 class OrderService
 {
     public function getOrderDetail($id)
-    {        
-        // Get the order currency
-        $orderCurrencyDetetion = new Order();
-        $result = $orderCurrencyDetetion->where('order_id', $id)->first();
-        if (is_null($result)) {
+    {
+        $order = $this->getOrder($id);
+        $orderDetail = $this->getOrderDetailByCurrency($order->currency, $id);
+        $orderDetail->address = $this->decodeAddress($orderDetail->address);
+
+        return $orderDetail;
+    }
+
+    protected function getOrder($id)
+    {
+        $order = Order::where('order_id', $id)->first();
+        if (is_null($order)) {
             throw new \Exception('Order not found');
         }
+        return $order;
+    }
 
-        // Get the order detail
+    protected function getOrderDetailByCurrency($currency, $id)
+    {
         $orderDetail = new OrderByCurrency();
-        $orderDetail->setTableCurrency($result->currency);
+        $orderDetail->setTableCurrency($currency);
         $result = $orderDetail->where('order_id', $id)->first();
         if (is_null($result)) {
             throw new \Exception('Order not found');
         }
-
-        // Decode the address field
-        if (!empty($result->address)) {
-            $result->address = json_decode($result->address, true);
-        }
-
         return $result;
+    }
+
+    protected function decodeAddress($address)
+    {
+        return !empty($address) ? json_decode($address, true) : $address;
     }
 }

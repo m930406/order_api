@@ -15,7 +15,7 @@ class OrderController extends Controller
         $this->orderService = $orderService;
     }
 
-    public function store(OrderRequest $request)
+    public function store(OrderRequest $request): mixed
     {
         try {
             // Validate the request parameters

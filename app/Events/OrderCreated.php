@@ -4,16 +4,14 @@ namespace App\Events;
 
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Contracts\Queue\ShouldQueue;
 
-class OrderCreated
+class OrderCreated implements ShouldQueue
 {
     use Dispatchable, SerializesModels;
 
     public $order;
 
-    /**
-     * Create a new event instance.
-     */
     public function __construct(array $order)
     {
         $this->order = $order;
