@@ -24,7 +24,7 @@ class StoreOrderListener
      */
     public function handle(OrderCreated $event): void
     {
-        $orderData = $event->order;
+        $orderData = $event->orderData;
 
         DB::beginTransaction();
 
