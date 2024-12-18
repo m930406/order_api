@@ -31,17 +31,17 @@ class OrderController extends Controller
             echo $e->getMessage();
             return response()->json(['message' => 'Order failed'], 200);
         }
-        
+
     }
 
-    public function show($id)
+    public function show(OrderRequest $request, $id)
     {
         try {
             // Validate the order id, only allow alphanumeric and underscore
-            if (preg_match('/[^a-zA-Z0-9_]/', $id)) {
-                throw new \Exception('Invalid order id');
-            }
-    
+            $request->validate([
+                'id' => 'required|regex:/^[a-zA-Z0-9_]+$/'
+            ]);
+
             $orderDetail = $this->orderService->getOrderDetail($id);
             return response()->json($orderDetail, 200);
         } catch (\Exception $e) {
@@ -49,3 +49,4 @@ class OrderController extends Controller
         }
     }
 }
+//        $this->orderService = Mockery::mock([OrderService::class]);
